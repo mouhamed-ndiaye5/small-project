@@ -43,19 +43,25 @@ $resultat= mysqli_query($connect,$sql);
    
   <?php if (isset($_GET['modifier'])): $id = (int)$_GET['modifier'];  
  ?> 
-    <form action="" method="post">
-        <input type="hidden" name="id" value="<?=$_GET['modifier']?>">
-        NOM : <input type="text" name="nom1"> <br><br>
-        PRENOM : <input type="text" name="prenom1"> <br><br>
-        TELEPHONE : <input type="number" name="phone1"><br><br> 
-        EMAIL : <input type="email" name="email1"> <br><br>
-        <button type="submit" >Modifier le contact</button>
-    </form>
+   
     <?php  if ($id > 0) { if ((!empty($_POST['nom1'])) && (!empty($_POST['prenom1'])) && (!empty($_POST['phone1']))&& (!empty($_POST['email1']))){
         $R = "UPDATE contacts SET nom = '$_POST[nom1]' , prenom= '$_POST[prenom1]' , telephone= '$_POST[phone1]' , email= '$_POST[email1]' WHERE id = $id "; mysqli_query($connect, $R);
         header("Location: liste.php");
         exit;
     }  else {echo "Entrez des valeurs pour modifier les donneés de la table"; } 
+     $result = mysqli_query($connect, "SELECT * FROM contacts WHERE id = $id");
+    $contact = mysqli_fetch_assoc($result);
+    ?>
+
+    <form action="" method="post">
+        <input type="hidden" name="id" value="<?= $contact['id'] ?>">
+        NOM : <input type="text" name="nom1" value="<?= htmlspecialchars($contact['nom']) ?>"> <br><br>
+        PRENOM : <input type="text" name="prenom1" value="<?= htmlspecialchars($contact['prenom']) ?>"> <br><br>
+        TELEPHONE : <input type="number" name="phone1" value="<?= htmlspecialchars($contact['telephone']) ?>"><br><br>
+        EMAIL : <input type="email" name="email1" value="<?= htmlspecialchars($contact['email']) ?>"> <br><br>
+        <button type="submit">Modifier le contact</button>
+    </form>
+     <?php
     } 
 endif;
 
